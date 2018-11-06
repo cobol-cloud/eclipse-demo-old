@@ -1,3 +1,4 @@
+      $set ilnamespace "com.microfocus.cobol.loan.amort"
        IDENTIFICATION DIVISION.
        PROGRAM-ID. LOANAMORT.
        REMARKS. THIS PROGRAM CALCULATES A MONTHLY PAYMENT SCHEDULE AMOUNT BASED

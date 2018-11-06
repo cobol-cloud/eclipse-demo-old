@@ -35,6 +35,11 @@
       <copybook-paths xsi:type="copybookPathsSettings">
          <path enabled="true" name="/LoanAmort" type="mfpath"/>
          <path enabled="true" name="/LoanAmort/cpy" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/com" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/com/microfocus" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/com/microfocus/cobol" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/com/microfocus/cobol/loan" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/com/microfocus/cobol/loan/amort" type="mfpath"/>
       </copybook-paths>
       <configurations default="New Configuration" linkedWith="2017" xsi:type="buildConfigurationsContainer">
          <configuration description="New Configuration" type="jvm" is64bit="true" createlbr="false" platform="Windows" xsi:type="cobolBuildConfiguration">
@@ -73,7 +78,7 @@
    </settings>
    <files xsi:type="projectFileStore">
       <filetype type="cobol" xsi:type="cobolFileContainer">
-         <file compile="true" path="LOANAMORT.cbl" xsi:type="cobolFile"/>
+         <file compile="true" path="com/microfocus/cobol/loan/amort/LOANAMORT.cbl" xsi:type="cobolFile"/>
       </filetype>
       <filetype type="cobol.copybook" xsi:type="cobolFileContainer"/>
    </files>
