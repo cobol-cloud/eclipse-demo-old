@@ -1,0 +1,119 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Transform" : [ "AWS::Serverless-2016-10-31" ],
+    "Description": "Loan Amort Demo",
+	"Parameters": {
+		"apiGatewayStageName": {
+			"Type": "String",
+			"AllowedPattern": "^[a-z0-9]+$",
+			"Default": "prodstage1"
+		}
+  	},
+	"Resources": {
+		"apiGateway": {
+			"Type": "AWS::ApiGateway::RestApi",
+			"Properties": {
+     			"Name": "LoanAmortApi",
+        		"Description": "API Gateway for Loan Amort Function",
+				"Body": {
+					"swagger": "2.0",
+					"info": {
+						"version": "2018-11-01T18:06:27Z",
+						"title": "apiGateway"
+					},
+					"basePath": { "Fn::Join": [ "", [ "/",	{ "Ref": "apiGatewayStageName" } ]] },
+					"schemes": [ "https" ],
+					"paths": {
+						"/": {
+							"get": {
+								"consumes": [ "application/json" ],
+								"produces": [ "application/json" ],
+								"parameters": [
+									{
+										"name": "p",
+										"in": "query",
+										"required": true,
+										"type": "string"
+									},
+									{
+										"name": "t",
+										"in": "query",
+										"required": true,
+										"type": "string"
+									},
+         							{
+										"name": "r",
+										"in": "query",
+										"required": true,
+										"type": "string"
+									}
+								],
+								"responses": {
+									"200": {
+										"description": "200 response",
+										"schema": {	"$ref": "#/definitions/Empty" }
+									}
+								},
+								"x-amazon-apigateway-integration": {
+									"uri": { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaFunction.Arn}:LoanAmortFunctionAlias/invocations" },
+									"responses": {	
+           								"default": { 
+           									"statusCode": "200"
+                  						} 
+                    				},
+									"requestTemplates": { "application/json": "{\r\n  \"principal\": \"$input.params('p')\",\r\n  \"term\": \"$input.params('t')\",\r\n  \"rate\": \"$input.params('r')\"\r\n}" },
+									"passthroughBehavior": "when_no_templates",
+									"httpMethod": "POST",
+									"contentHandling": "CONVERT_TO_TEXT",
+									"type": "aws"
+								}
+							}   		
+						}
+					},
+					"definitions": {
+						"Empty": {
+							"type": "object",
+							"title": "Empty Schema"
+						}
+					}
+				}
+			}
+		},
+	    "apiGatewayDeployment": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "DependsOn": [ "apiGateway" ],
+            "Properties": { 
+              	"RestApiId": { "Ref": "apiGateway" },
+                "StageName": { "Ref": "apiGatewayStageName"}
+            }
+        },
+  		"lambdaFunction": {
+			"Type": "AWS::Serverless::Function",
+			"Properties": {
+     			"FunctionName": "LoanAmortFunction",
+				"Handler": "com.microfocus.loan.amort.lambda.CalculateLoanHandler",
+				"Runtime": "java8",
+				"CodeUri": "./target/LoanLambda-1.0.0.jar",
+				"Description": "Calculator Function description",
+				"MemorySize": 512,
+				"Timeout": 15,
+				"AutoPublishAlias": "LoanAmortFunctionAlias"
+			}
+		},
+        "lambdaApiGatewayInvoke": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": "LoanAmortFunction:LoanAmortFunctionAlias",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": { "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/" }
+            }
+        }
+	},
+ 	"Outputs": {
+        "ApiUrl": {
+            "Description": "API's address'",
+            "Value": { "Fn::Join": [ "", [ "https://", { "Ref": "apiGateway" }, ".execute-api.", { "Ref": "AWS::Region" }, ".amazonaws.com/", { "Ref": "apiGatewayStageName" }] ] }
+        }
+    }
+}
