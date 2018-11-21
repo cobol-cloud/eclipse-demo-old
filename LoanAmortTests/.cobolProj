@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cobolProject" name="LoanAmortTests" uuid="ff4b1d3b-f5d5-4386-88cb-cb67ac437e44" version="5.0">
    <settings xsi:type="projectSettingsContainer">
       <build-precedence-paths xsi:type="buildPrecedenceSettings">
-         <path enabled="true" name="/LoanAmortTests" type="mfpath"/>
+         <path enabled="true" name="/LoanAmortTests/src" type="mfpath"/>
       </build-precedence-paths>
       <dependent-projects xsi:type="dependentProjectsSettings">
          <dependent-project name="LoanAmort"/>
@@ -37,11 +37,11 @@
       <copybook-paths xsi:type="copybookPathsSettings">
          <path enabled="true" name="/LoanAmortTests" type="mfpath"/>
          <path enabled="true" name="/LoanAmort" type="mfpath"/>
-         <path enabled="false" name="/LoanAmortTests/com" type="mfpath"/>
-         <path enabled="false" name="/LoanAmortTests/com/microfocus" type="mfpath"/>
-         <path enabled="false" name="/LoanAmortTests/com/microfocus/cobol" type="mfpath"/>
-         <path enabled="false" name="/LoanAmortTests/com/microfocus/cobol/loan" type="mfpath"/>
-         <path enabled="false" name="/LoanAmortTests/com/microfocus/cobol/loan/amort" type="mfpath"/>
+         <path enabled="false" name="/LoanAmortTests/src" type="mfpath"/>
+         <path enabled="false" name="/LoanAmortTests/src/com" type="mfpath"/>
+         <path enabled="false" name="/LoanAmortTests/src/com/microfocus" type="mfpath"/>
+         <path enabled="false" name="/LoanAmortTests/src/com/microfocus/loan" type="mfpath"/>
+         <path enabled="false" name="/LoanAmortTests/src/com/microfocus/loan/amort" type="mfpath"/>
       </copybook-paths>
       <configurations default="New Configuration" linkedWith="2017" xsi:type="buildConfigurationsContainer">
          <configuration description="New Configuration" type="jvm" is64bit="true" createlbr="false" platform="Windows" xsi:type="cobolBuildConfiguration">
@@ -66,8 +66,8 @@
                <generate value="false"/>
                <retainDirectivesFile value="false"/>
                <genListFile value="false"/>
-               <jarFolder value=""/>
-               <jarName value=""/>
+               <jarFolder value="dist"/>
+               <jarName value="loanamorttests.jar"/>
                <packageToFolderMapping value="true"/>
                <useJvmDynamicCalls value="false"/>
                <useJvmIncrementalBuild value="false"/>
@@ -79,7 +79,7 @@
    </settings>
    <files xsi:type="projectFileStore">
       <filetype type="cobol" xsi:type="cobolFileContainer">
-         <file compile="true" path="com/microfocus/cobol/loan/amort/TESTLOANAMORT.cbl" xsi:type="cobolFile"/>
+         <file compile="true" path="src/com/microfocus/loan/amort/TESTLOANAMORT.cbl" xsi:type="cobolFile"/>
       </filetype>
       <filetype type="cobol.copybook" xsi:type="cobolFileContainer"/>
    </files>

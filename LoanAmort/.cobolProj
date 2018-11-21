@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cobolProject" name="LoanAmort" uuid="5bec1727-c7e1-4929-8e60-6b3c8d489d77" version="5.0">
    <settings xsi:type="projectSettingsContainer">
       <build-precedence-paths xsi:type="buildPrecedenceSettings">
-         <path enabled="true" name="/LoanAmort" type="mfpath"/>
+         <path enabled="true" name="/LoanAmort/src" type="mfpath"/>
       </build-precedence-paths>
       <dependent-projects xsi:type="dependentProjectsSettings"/>
       <cobol_settings xsi:type="cobolSettings">
@@ -35,11 +35,11 @@
       <copybook-paths xsi:type="copybookPathsSettings">
          <path enabled="true" name="/LoanAmort" type="mfpath"/>
          <path enabled="true" name="/LoanAmort/cpy" type="mfpath"/>
-         <path enabled="false" name="/LoanAmort/com" type="mfpath"/>
-         <path enabled="false" name="/LoanAmort/com/microfocus" type="mfpath"/>
-         <path enabled="false" name="/LoanAmort/com/microfocus/cobol" type="mfpath"/>
-         <path enabled="false" name="/LoanAmort/com/microfocus/cobol/loan" type="mfpath"/>
-         <path enabled="false" name="/LoanAmort/com/microfocus/cobol/loan/amort" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/src" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/src/com" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/src/com/microfocus" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/src/com/microfocus/loan" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/src/com/microfocus/loan/amort" type="mfpath"/>
       </copybook-paths>
       <configurations default="New Configuration" linkedWith="2017" xsi:type="buildConfigurationsContainer">
          <configuration description="New Configuration" type="jvm" is64bit="true" createlbr="false" platform="Windows" xsi:type="cobolBuildConfiguration">
@@ -48,13 +48,13 @@
                <options>
                   <option name="WARNING" value="1"/>
                   <option name="DIALECT" value="MF"/>
-                  <option id="additional" name="additional" value="OSVS OLDCOPY ILSMARTLINKAGE"/>
                   <option name="CHARSET" value="ASCII"/>
                   <option name="ILUSING" value="java.lang"/>
                   <option name="MAX-ERROR" value="100"/>
                   <option name="SOURCEFORMAT" value="variable"/>
                   <option name="NOWARNING"/>
                   <option id="LE370" name="ILUSING" value="com.microfocus.le370"/>
+                  <option id="additional" value="OSVS OLDCOPY"/>
                </options>
                <createJar value="false"/>
                <createJarAfterBuild value="false"/>
@@ -78,7 +78,7 @@
    </settings>
    <files xsi:type="projectFileStore">
       <filetype type="cobol" xsi:type="cobolFileContainer">
-         <file compile="true" path="com/microfocus/cobol/loan/amort/LOANAMORT.cbl" xsi:type="cobolFile"/>
+         <file compile="true" path="src/com/microfocus/loan/amort/LOANAMORT.cbl" xsi:type="cobolFile"/>
       </filetype>
       <filetype type="cobol.copybook" xsi:type="cobolFileContainer"/>
    </files>

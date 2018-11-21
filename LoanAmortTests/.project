@@ -12,6 +12,14 @@
 					<key>buildThreadCount</key>
 					<value>1</value>
 				</dictionary>
+				<dictionary>
+					<key>settingsDir</key>
+					<value>.settings</value>
+				</dictionary>
+				<dictionary>
+					<key>useDirectiveSet</key>
+					<value>true</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>

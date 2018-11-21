@@ -1,3 +1,4 @@
+      *> Structure of the result from loan calculation
        01 OUTDATA.
            03 PAYMENTS OCCURS 1 TO 480 DEPENDING ON LOANTERM.
                05 OUTINTPAID     PIC $$,$$$.99.

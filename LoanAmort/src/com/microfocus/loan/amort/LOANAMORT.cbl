@@ -1,4 +1,17 @@
-      $set ilnamespace "com.microfocus.cobol.loan.amort"
+      ******************************************************************
+      *
+      * Copyright (C) Micro Focus 1984-2018. All rights reserved.
+      *
+      * This sample code is supplied for demonstration purposes only
+      * on an "as is" basis and is for use at your own risk.
+      *
+      ******************************************************************
+      *> package
+      $set ilnamespace "com.microfocus.loan.amort"
+      *> set the ILSMARTLINKAGE directive to generate classes
+      *> for linkage-section variables
+      $set ilsmartlinkage       
+      
        IDENTIFICATION DIVISION.
        PROGRAM-ID. LOANAMORT.
        REMARKS. THIS PROGRAM CALCULATES A MONTHLY PAYMENT SCHEDULE AMOUNT BASED

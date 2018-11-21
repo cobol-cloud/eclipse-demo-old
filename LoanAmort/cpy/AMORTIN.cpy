@@ -1,3 +1,4 @@
+      *> Structure of the input data for the loan calculator
        01 LOANINFO.
            03 PRINCIPAL              PIC S9(8) COMP-3.
            03 LOANTERM               PIC S9(8) COMP-3.

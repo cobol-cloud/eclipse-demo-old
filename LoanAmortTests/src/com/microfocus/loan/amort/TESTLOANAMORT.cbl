@@ -1,6 +1,17 @@
-      $set ilnamespace "com.microfocus.cobol.loan.amort"
-       COPY "MFUNIT_PROTOTYPES".
+      ******************************************************************
+      *
+      * Copyright (C) Micro Focus 1984-2018. All rights reserved.
+      *
+      * This sample code is supplied for demonstration purposes only
+      * on an "as is" basis and is for use at your own risk.
+      *
+      ******************************************************************
 
+      *> Test Fixture for LOANAMORT program
+      
+       COPY "mfunit_prototypes".
+      
+      $set ilnamespace "com.microfocus.loan.amort"
        IDENTIFICATION DIVISION.
        PROGRAM-ID. TESTLOANAMORT.
 
@@ -13,7 +24,7 @@
        78 TESTPAYMENTFIVE VALUE "TESTPAYMENTFIVE".
        78 TESTPRINCIPLEATTERMEND VALUE "TESTPRINCIPLEATTERMEND".
        
-       COPY "MFUNIT".
+       COPY "mfunit".
 
        COPY AMORTIN.
        COPY AMORTOUT.

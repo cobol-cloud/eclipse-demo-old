@@ -1,5 +1,10 @@
 package com.microfocus.loan.amort.lambda.model;
 
+/**
+ * POJO representing a single payment in the amortization schedule
+ * 
+ * @author Micro Focus
+ */
 public class AmortData {
 	private String payDateNo;
 	private String interestPaid;

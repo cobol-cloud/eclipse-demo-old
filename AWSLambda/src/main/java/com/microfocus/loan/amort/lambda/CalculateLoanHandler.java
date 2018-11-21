@@ -7,31 +7,34 @@ import java.time.format.FormatStyle;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.microfocus.cobol.loan.amort.LOANAMORT;
-import com.microfocus.cobol.loan.amort.Loaninfo;
-import com.microfocus.cobol.loan.amort.Outdata;
 import com.microfocus.cobol.runtimeservices.RunUnit;
+import com.microfocus.loan.amort.LOANAMORT;
+import com.microfocus.loan.amort.Loaninfo;
+import com.microfocus.loan.amort.Outdata;
 import com.microfocus.loan.amort.lambda.model.AmortData;
 import com.microfocus.loan.amort.lambda.model.Request;
 import com.microfocus.loan.amort.lambda.model.Response;
 
+/**
+ * AWS Lambda request handler that invokes the COBOL JVM loan calculator and
+ * returns the result of the calculation
+ * 
+ * @author Micro Focus
+ */
 public class CalculateLoanHandler implements RequestHandler<Request, Response> {
 
 	@Override
 	public Response handleRequest(Request request, Context context) {
 
-		context.getLogger().log("Request:\n");
-		context.getLogger().log("\tPrincipal: " + request.getPrincipal() + "\n");
-		context.getLogger().log("\tTerm: " + request.getTerm() + "\n");
-		context.getLogger().log("\tRate: " + request.getRate() + "\n");
-
 		Outdata outData = new Outdata();
+		// Prepare the input for the COBOL JVM loan calculator
 		Loaninfo loaninfo = new Loaninfo();
 		loaninfo.setPrincipal(request.getPrincipal());
 		loaninfo.setLoanterm(request.getTerm());
 
 		loaninfo.setRate(BigDecimal.valueOf(request.getRate()));
 
+		// Invoke the COBOL JVM loan calculator by using a RunUnit
 		RunUnit myRunUnit = new RunUnit();
 		try {
 			LOANAMORT programInstance = new LOANAMORT();
@@ -45,6 +48,7 @@ public class CalculateLoanHandler implements RequestHandler<Request, Response> {
 			}
 		}
 
+		// Prepare the response
 		Response response = new Response();
 		LocalDate currDate = LocalDate.now();
 		if (currDate.getDayOfMonth() > 28) {
@@ -65,10 +69,6 @@ public class CalculateLoanHandler implements RequestHandler<Request, Response> {
 			response.getAmortList().add(adObject);
 		}
 		response.setTotalInterest(outData.getOuttotintpaid());
-
-		context.getLogger().log("Response:\n");
-		context.getLogger().log("\tRow count: " + response.getAmortList().size() + "\n");
-		context.getLogger().log("\tTotal: " + response.getTotalInterest() + "\n");
 
 		return response;
 	}
