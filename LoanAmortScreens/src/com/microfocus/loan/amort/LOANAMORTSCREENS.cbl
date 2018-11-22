@@ -1,4 +1,4 @@
-      $set ilnamespace "com.microfocus.loan.amort.screens"
+      $set ilnamespace "com.microfocus.loan.amort"
        IDENTIFICATION DIVISION.
        PROGRAM-ID. LOANAMORTSCREENS.
        REMARKS. THIS PROGRAM CALCULATES A MONTHLY PAYMENT SCHEDULE AMOUNT BASED

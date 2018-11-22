@@ -40,6 +40,7 @@
          <path enabled="false" name="/LoanAmort/src/com/microfocus" type="mfpath"/>
          <path enabled="false" name="/LoanAmort/src/com/microfocus/loan" type="mfpath"/>
          <path enabled="false" name="/LoanAmort/src/com/microfocus/loan/amort" type="mfpath"/>
+         <path enabled="false" name="/LoanAmort/dist" type="mfpath"/>
       </copybook-paths>
       <configurations default="New Configuration" linkedWith="2017" xsi:type="buildConfigurationsContainer">
          <configuration description="New Configuration" type="jvm" is64bit="true" createlbr="false" platform="Windows" xsi:type="cobolBuildConfiguration">
@@ -54,10 +55,10 @@
                   <option name="SOURCEFORMAT" value="variable"/>
                   <option name="NOWARNING"/>
                   <option id="LE370" name="ILUSING" value="com.microfocus.le370"/>
-                  <option id="additional" value="OSVS OLDCOPY"/>
+                  <option id="additional" name="additional" value="OSVS OLDCOPY"/>
                </options>
-               <createJar value="false"/>
-               <createJarAfterBuild value="false"/>
+               <createJar value="true"/>
+               <createJarAfterBuild value="true"/>
                <debug value="true"/>
                <enableCodeCoverage value="false"/>
                <enableProfiler value="false"/>
@@ -65,8 +66,8 @@
                <generate value="false"/>
                <retainDirectivesFile value="false"/>
                <genListFile value="false"/>
-               <jarFolder value=""/>
-               <jarName value=""/>
+               <jarFolder value="dist"/>
+               <jarName value="loanamort.jar"/>
                <packageToFolderMapping value="true"/>
                <useJvmDynamicCalls value="false"/>
                <useJvmIncrementalBuild value="false"/>
