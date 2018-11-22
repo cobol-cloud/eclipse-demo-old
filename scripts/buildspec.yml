@@ -1,0 +1,45 @@
+version: 0.2
+
+env:
+  variables:
+    build_version: "0.1"
+
+phases:
+  install:
+    commands:
+      # install prerequisites
+      - curl -s http://apache.cbox.biz/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz --output maven.tar.gz
+      - tar xzf maven.tar.gz
+      - export M2_HOME=$PWD/apache-maven-3.5.4
+      - export ANT_HOME=$(find $MFPRODBASE/remotedev/ant -type d -name 'apache-ant*')
+      - export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$ANT_HOME/bin:$PATH
+      - . $MFPRODBASE/bin/cobsetenv
+    finally:
+      # nothing special here 
+  pre_build:
+    commands:
+  build:
+    commands:
+      - echo BUILD STARTED ON `date`
+      # build and install cobol jvm project
+      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmort/.cobolBuild
+      - mvn install:install-file -Dfile=LoanAmort/dist/loanamort.jar -DgroupId=com.microfocus.cobol -DartifactId=loanamort -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true
+      # install cobol rts
+      - mvn install:install-file -DgroupId=com.microfocus.cobol -DartifactId=mfcobolrts -Dversion=5.0.0 -Dpackaging=jar -Dfile=$COBDIR/lib/mfcobolrts.jar -DgeneratePom=true
+      - mvn install:install-file -DgroupId=com.microfocus.cobol -DartifactId=mfcobol -Dversion=5.0.0 -Dpackaging=jar -Dfile=$COBDIR/lib/mfcobol.jar -DgeneratePom=true
+      # build the lambda 
+      - mvn -f AWSLambda/pom2.xml install -DskipTests
+      - echo BUILD COMPLETED ON `date`
+  post_build:
+    commands:
+      - chmod a+x scripts/update_template.sh
+      - ./scripts/update_template.sh
+      # copy class files and depencencies to main folder for packaging
+      - mvn -f AWSLambda/pom2.xml dependency:copy-dependencies -DoutputDirectory=$PWD/lib
+      - cd AWSLambda/target/classes
+      - find . -name "*.class" | xargs cp --parents -t ../../../
+      # update the template for a new function version
+artifacts:
+  files:
+      - lib/*
+      - com/**/*

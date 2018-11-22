@@ -1,0 +1,87 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Loan Amort Build Project Creation",
+	"Parameters": {
+		"repoName": {
+			"Type": "String",
+			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+			"Default": "LoanAmortCommit"
+		},
+		"buildProjectName": {
+			"Type": "String",
+			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+			"Default": "LoanAmortTest"
+        },
+        "dockerImageName": {
+			"Type": "String",
+			"Default": "040339284706.dkr.ecr.us-east-2.amazonaws.com/microfocus/docker/repo/vcdevhub:5.0"
+        },
+        "s3bucketName": {
+      		"Type": "String",
+      		"AllowedPattern": "[a-zA-Z0-9\\-\\.]+",
+			"Default": "emobucket01"
+     	}
+	},
+	"Resources": {
+	   "CodeBuildRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": { "Service": [ "codebuild.amazonaws.com" ] },
+                            "Action": [ "sts:AssumeRole" ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "codebuild-service",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "*",
+                                    "Resource": "*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        }
+                    }
+                ]
+            }
+        },
+		"LoanAmortBuild": {
+            "Type": "AWS::CodeBuild::Project",
+            "DependsOn": "CodeBuildRole",
+            "Properties": {
+                "Name": {
+                    "Ref": "buildProjectName"
+                },
+                "Description": "Loan Amort sources build",
+                "Environment": {
+                    "Type": "LINUX_CONTAINER",
+                    "ComputeType": "BUILD_GENERAL1_SMALL",
+                    "Image": {
+                        "Ref": "dockerImageName"
+                    }
+                },
+                "TimeoutInMinutes": 15,
+                "Source": {
+                    "BuildSpec": "scripts/buildspec_mfunit.yml",
+                    "Type": "CODECOMMIT",
+                    "Location": {
+                        "Fn::Join": [ "", [ "https://git-codecommit.", { "Ref": "AWS::Region" }, ".amazonaws.com/v1/repos/", {"Ref": "repoName"} ] ]
+                    }
+                },
+                "Artifacts": {
+                    "Type": "S3",
+                    "Location": {"Ref": "s3bucketName"}
+                },
+                "ServiceRole": { "Ref": "CodeBuildRole" }
+            }
+        }        
+	}
+}

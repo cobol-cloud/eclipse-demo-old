@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    build_version: "0.1"
+
+phases:
+  install:
+    commands:
+      # install prerequisites
+      - env
+      - ls $CODEBUILD_SRC_DIR_BuildArtifact
+      - export ANT_HOME=$(find $MFPRODBASE/remotedev/ant -type d -name 'apache-ant*')
+      - export PATH=$JAVA_HOME/bin:$ANT_HOME/bin:$PATH
+      - . $MFPRODBASE/bin/cobsetenv
+    finally:
+      # nothing special here 
+  pre_build:
+    commands:
+  build:
+    commands:
+      - echo BUILD STARTED ON `date`
+      # build
+      - ls $CODEBUILD_SRC_DIR_BuildArtifact/lib
+      - jar tf $CODEBUILD_SRC_DIR_BuildArtifact/lib/loanamort-1.0.0.jar
+      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmortTests/.cobolBuild
+      # prepare for tests
+      - mfjarprogmap -directory LoanAmortTests/bin
+      - jar -cvf LoanAmortTests/bin/LoanAmortTests.jar -C LoanAmortTests/bin .
+      # get compiled sources from secondary input artifacts
+      - export CLASSPATH=$CLASSPATH:$CODEBUILD_SRC_DIR_BuildArtifact/lib/loanamort-1.0.0.jar
+      # run tests
+      - cobmfurunj -show-progress LoanAmortTests/bin/LoanAmortTests.jar
+      - cat LoanAmortTests/bin/LoanAmortTests-report.txt
+      # done
+      - echo BUILD COMPLETED ON `date`
+  post_build:
+    commands:
+artifacts:
+  files:

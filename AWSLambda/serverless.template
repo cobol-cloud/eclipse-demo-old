@@ -1,27 +1,33 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
     "Transform" : [ "AWS::Serverless-2016-10-31" ],
-    "Description": "Loan Amort Demo",
+    "Description": "AWS CloudFormation script used to create Lambda Function and API gateway to access it.",
 	"Parameters": {
-		"apiGatewayStageName": {
+		"functionName": {
+    		"Description" : "Name of the Lambda Function.",
 			"Type": "String",
-			"AllowedPattern": "^[a-z0-9]+$",
-			"Default": "prodstage1"
+			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+			"Default": "LoanAmortFucntion"
+		},
+  		"apiName": {
+      		"Description" : "Name of the API gateway used to acces the Lambda function.",
+			"Type": "String",
+			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+			"Default": "LoanAmortApi"
 		}
   	},
 	"Resources": {
 		"apiGateway": {
-			"Type": "AWS::ApiGateway::RestApi",
+			"Type": "AWS::Serverless::Api",
 			"Properties": {
-     			"Name": "LoanAmortApi",
-        		"Description": "API Gateway for Loan Amort Function",
-				"Body": {
+     			"Name": { "Ref": "apiName" },
+				"StageName": "loanamort",
+				"DefinitionBody": {
 					"swagger": "2.0",
 					"info": {
 						"version": "2018-11-01T18:06:27Z",
 						"title": "apiGateway"
 					},
-					"basePath": { "Fn::Join": [ "", [ "/",	{ "Ref": "apiGatewayStageName" } ]] },
 					"schemes": [ "https" ],
 					"paths": {
 						"/": {
@@ -51,14 +57,20 @@
 								"responses": {
 									"200": {
 										"description": "200 response",
-										"schema": {	"$ref": "#/definitions/Empty" }
+										"schema": {	"$ref": "#/definitions/Empty" },
+							            "headers" : {
+				  	                      "Access-Control-Allow-Origin" : { "type" : "string" }
+					                    }
 									}
 								},
 								"x-amazon-apigateway-integration": {
-									"uri": { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaFunction.Arn}:LoanAmortFunctionAlias/invocations" },
+									"uri": { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaFunction.Arn}:fncAlias/invocations" },
 									"responses": {	
            								"default": { 
-           									"statusCode": "200"
+           									"statusCode": "200",
+                    						"responseParameters" : {
+						                        "method.response.header.Access-Control-Allow-Origin" : "'*'"
+					                        }
                   						} 
                     				},
 									"requestTemplates": { "application/json": "{\r\n  \"principal\": \"$input.params('p')\",\r\n  \"term\": \"$input.params('t')\",\r\n  \"rate\": \"$input.params('r')\"\r\n}" },
@@ -79,41 +91,36 @@
 				}
 			}
 		},
-	    "apiGatewayDeployment": {
-            "Type": "AWS::ApiGateway::Deployment",
-            "DependsOn": [ "apiGateway" ],
-            "Properties": { 
-              	"RestApiId": { "Ref": "apiGateway" },
-                "StageName": { "Ref": "apiGatewayStageName"}
-            }
-        },
   		"lambdaFunction": {
 			"Type": "AWS::Serverless::Function",
 			"Properties": {
-     			"FunctionName": "LoanAmortFunction",
+     			"FunctionName": { "Ref": "functionName" },
 				"Handler": "com.microfocus.loan.amort.lambda.CalculateLoanHandler",
 				"Runtime": "java8",
-				"CodeUri": "./target/LoanLambda-1.0.0.jar",
+				"CodeUri": "./target/loanloambda-1.0.0.jar",
 				"Description": "Calculator Function description",
 				"MemorySize": 512,
 				"Timeout": 15,
-				"AutoPublishAlias": "LoanAmortFunctionAlias"
+				"AutoPublishAlias": "fncAlias",
+    			"DeploymentPreference" : {
+         			"Type": "AllAtOnce"
+       			}
 			}
 		},
-        "lambdaApiGatewayInvoke": {
+        "permissions": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "LoanAmortFunction:LoanAmortFunctionAlias",
+                "FunctionName": { "Fn::Join": ["", [{ "Ref": "functionName" }, ":fncAlias"] ] },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": { "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/" }
             }
         }
 	},
  	"Outputs": {
-        "ApiUrl": {
-            "Description": "API's address'",
-            "Value": { "Fn::Join": [ "", [ "https://", { "Ref": "apiGateway" }, ".execute-api.", { "Ref": "AWS::Region" }, ".amazonaws.com/", { "Ref": "apiGatewayStageName" }] ] }
+        "ApiAddress": {
+            "Description": "API address for accessing the Lambda Function",
+            "Value": { "Fn::Join": [ "", [ "https://", { "Ref": "apiGateway" }, ".execute-api.", { "Ref": "AWS::Region" }, ".amazonaws.com/loanamort" ] ] }
         }
     }
 }

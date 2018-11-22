@@ -1,0 +1,171 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Loan Amort Pipeline",
+	"Parameters": {
+    "pipelineName": {
+      	"Type": "String",
+      	"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+      	"Default": "LoanAmortPipeline"
+    },
+    "repoName": {
+    	"Type": "String",
+	  	"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+		"Default": "LoanAmortCommit"
+		},
+    "buildProjectName": {
+		  "Type": "String",
+		  "AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+		  "Default": "LoanAmortBuild"
+     },
+    "testProjectName": {
+      "Type": "String",
+      "AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
+      "Default": "LoanAmortTest"
+     },
+     "s3bucketName": {
+      	"Type": "String",
+      	"AllowedPattern": "[a-zA-Z0-9\\-\\.]+",
+ 		    "Default": "emobucket01"
+     }
+	},
+	"Resources": {
+    "LoanAmortPipeline": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "Name": { 
+          "Ref": "pipelineName"
+        },
+        "RoleArn": { 
+          "Fn::GetAtt": [ "CodePipelineRole", "Arn" ]
+        },
+        "ArtifactStore": {
+          "Type": "S3",
+          "Location": { "Ref": "s3bucketName"}
+        },
+        "Stages": [
+          {
+            "Name": "Source",
+            "Actions": [
+            {
+              "Name": "Source",
+              "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "AWS",
+                  "Provider": "CodeCommit",
+                  "Version": "1"
+              },
+              "RunOrder": 1,
+              "Configuration": {
+                  "BranchName": "master",
+                  "PollForSourceChanges": "false",
+                  "RepositoryName": { "Ref": "repoName" }
+              },
+              "OutputArtifacts": [{ "Name": "SourceArtifact" }],
+              "InputArtifacts":  [ ]
+            }]
+          },
+          {
+           "Name": "Compile",
+           "Actions": [
+              {
+               "Name": "Build",
+               "ActionTypeId": {
+                 "Category": "Build",
+                 "Owner": "AWS",
+                 "Provider": "CodeBuild",
+                 "Version": "1"
+               },
+               "RunOrder": 1,
+               "Configuration": { "ProjectName": { "Ref": "buildProjectName" } },
+               "OutputArtifacts": [ { "Name": "BuildArtifact" } ],
+               "InputArtifacts": [ { "Name": "SourceArtifact" } ]
+              },
+              {
+                "Name": "MFUnitTest",
+                "ActionTypeId": {
+                  "Category": "Test",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "RunOrder": 2,
+                "Configuration": { "ProjectName": { "Ref": "testProjectName" },
+                                   "PrimarySource": "SourceArtifact"  },
+                "OutputArtifacts": [ ],
+                "InputArtifacts": [ { "Name": "SourceArtifact" }, { "Name": "BuildArtifact" }]
+               }]
+          },
+          {
+           "Name": "Deploy",
+           "Actions": [
+            {
+              "Name": "Deployment",
+              "ActionTypeId": {
+                "Category": "Deploy",
+                "Owner": "AWS",
+                "Provider": "CloudFormation",
+                "Version": "1"
+              },
+              "RunOrder": 1,
+              "Configuration": {
+                "ActionMode": "CREATE_UPDATE",
+                "Capabilities": "CAPABILITY_IAM",
+                "ParameterOverrides": "{ \"functionName\": \"emo001LoanAmortFucntion\", \"apiName\": \"emo001LoanAmortApi\", \"s3Key\":  {\"Fn::GetArtifactAtt\" : [\"BuildArtifact\", \"ObjectKey\"]}, \"s3Bucket\":  {\"Fn::GetArtifactAtt\" : [\"BuildArtifact\", \"BucketName\"]} }",
+                "RoleArn": { 
+                  "Fn::GetAtt": [ "CloudformationRole", "Arn" ]
+                },
+                "StackName": "emo001stackPipelineDeploy",
+                "TemplatePath": "SourceArtifact::scripts/serverless.template"
+              },
+              "OutputArtifacts": [],
+              "InputArtifacts": [ { "Name": "SourceArtifact" }, { "Name": "BuildArtifact" } ]
+             }]
+          }]
+       }
+   },
+   "CodePipelineRole": {
+    "Type": "AWS::IAM::Role",
+    "Properties": {
+      "ManagedPolicyArns": [
+        "arn:aws:iam::aws:policy/AdministratorAccess"
+      ],
+      "AssumeRolePolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [ "sts:AssumeRole" ],
+              "Principal": {
+                "Service": [
+                  "codepipeline.amazonaws.com"
+                ]
+              }
+            }
+          ]
+        }
+    }
+  }, 
+  "CloudformationRole": {
+    "Type": "AWS::IAM::Role",
+    "Properties": {
+      "ManagedPolicyArns": [
+        "arn:aws:iam::aws:policy/AdministratorAccess"
+      ],
+      "AssumeRolePolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [ "sts:AssumeRole" ],
+              "Principal": {
+                "Service": [
+                  "cloudformation.amazonaws.com"
+                ]
+              }
+            }
+          ]
+        }
+    }
+  }
+ }
+}
