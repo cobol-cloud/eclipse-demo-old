@@ -10,7 +10,7 @@
 			"Default": "LoanAmortFucntion"
 		},
   		"apiName": {
-      		"Description" : "Name of the API gateway used to acces the Lambda function.",
+      		"Description" : "Name of the API gateway used to access the Lambda function.",
 			"Type": "String",
 			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
 			"Default": "LoanAmortApi"
@@ -97,7 +97,7 @@
      			"FunctionName": { "Ref": "functionName" },
 				"Handler": "com.microfocus.loan.amort.lambda.CalculateLoanHandler",
 				"Runtime": "java8",
-				"CodeUri": "./target/loanloambda-1.0.0.jar",
+				"CodeUri": "./target/loanlambda-1.0.0.jar",
 				"Description": "Calculator Function description",
 				"MemorySize": 512,
 				"Timeout": 15,
