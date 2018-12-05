@@ -1,0 +1,12 @@
+<!-->ANT file to create HTML report out of the mfunit test results.<-->
+<project name="LoanAmortTests report" basedir="." default="report">
+
+	<target name="report">
+		<mkdir dir="${basedir}/bin/html_reports" />
+		<junitreport todir="${basedir}/bin/html_reports">
+			<fileset dir="${basedir}/bin/reports" includes="**/*.xml"/>
+			<report format="frames" todir="${basedir}/bin/html_reports" />
+		</junitreport>
+	</target>
+
+</project>
