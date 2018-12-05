@@ -18,7 +18,7 @@ phases:
   build:
     commands:
       # build
-      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmortTests/.cobolBuild
+      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmortTests/build.xml
       # prepare for tests
       - mfjarprogmap -directory LoanAmortTests/bin
       - jar -cvf LoanAmortTests/bin/LoanAmortTests.jar -C LoanAmortTests/bin .

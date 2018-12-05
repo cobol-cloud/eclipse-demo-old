@@ -21,7 +21,7 @@ phases:
   build:
     commands:
       # build and install cobol jvm project and cobol rts
-      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmort/.cobolBuild
+      - ant -lib $COBDIR/lib/mfant.jar -f LoanAmort/build.xml
       - mvn -q install:install-file -Dfile=LoanAmort/dist/loanamort.jar -DgroupId=com.microfocus.loanamort -DartifactId=loanamort -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true
       - mvn -q install:install-file -Dfile=$COBDIR/lib/mfcobolrts.jar -DgroupId=com.microfocus.cobol -DartifactId=mfcobolrts -Dversion=5.0.0 -Dpackaging=jar -DgeneratePom=true
       - mvn -q install:install-file -Dfile=$COBDIR/lib/mfcobol.jar -DgroupId=com.microfocus.cobol -DartifactId=mfcobol -Dversion=5.0.0 -Dpackaging=jar -DgeneratePom=true
