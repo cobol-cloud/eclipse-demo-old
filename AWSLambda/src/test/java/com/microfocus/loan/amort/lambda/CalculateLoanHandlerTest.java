@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.microfocus.loan.amort.lambda.model.Request;
 import com.microfocus.loan.amort.lambda.model.Response;
@@ -16,20 +17,22 @@ import com.microfocus.loan.amort.lambda.model.Response;
 public class CalculateLoanHandlerTest {
 
 	private static Request input;
-
+	private final static String JSON = "{\n" + 
+			"  \"principal\": \"50000\",\n" + 
+			"  \"term\": \"60\",\n" + 
+			"  \"rate\": \"3.5\"\n" + 
+			"}"; 
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
+	
 	@BeforeClass
 	public static void createInput() throws IOException {
-		// FIXME: Qucik and dirty solution is to place the test resource in the same
-		// package as the test class. Move the test resource in /src/test/resources and
-		// make it discoverable by TestUtils
-		input = TestUtils.parse("test.json", Request.class);
+		 input = mapper.readValue(JSON.getBytes(), Request.class);
 	}
-
+	
 	private Context createContext() {
 		TestContext ctx = new TestContext();
-
 		ctx.setFunctionName("CalculateLoanHandler");
-
 		return ctx;
 	}
 
