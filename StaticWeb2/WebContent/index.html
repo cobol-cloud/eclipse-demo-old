@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Loan Calculator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="icon" href="favicon.ico">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="App.js"></script>
+
+<style> 
+  .numeral {font-weight: bold; font-size: 4rem; line-height: 1.1}
+  .currency {font-size: 50%; position: relative; top:-1.25rem}
+  .justified-text-space-between {display: flex; text-aling:center; justify-content: space-between; line-height: 27px;} 
+  .with-bottom-border {border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: rgb(221, 221, 221);}
+</style>
+
+</head>
+
+<body>
+	<div id="root" class="container">
+		<div class="jumbotron">
+			<h2>Amortization Schedule Calculator</h2>
+			<p>
+			This amortization calculator will show you how much of your monthly payment will go toward the principal and how much will go toward the interest.<br>
+			The calculator uses COBOL JVM code that runs in the Cloud and returns you the details. Before using it you should setup the API Endpoint that is the URL of an AWS Lambda or an Azure function. 
+			</p>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<form id="calculator-input-form">
+							<div class="form-group">
+								<label for="formApiEndpoint" class="control-label">API Endpoint</label>
+								<span class="input-group">
+									<input readonly placeholder="Enter API Endpoint" name="apiEndpoint" type="text" id="formApiEndpointInput" class="form-control" value="">
+										<span class="input-group-btn">
+											<button aria-label="Edit" type="button" id="buttonApiEndpointEdit" class="btn btn-default">
+												<span id="buttonApiEndpointEditGlyphIcon" class="glyphicon glyphicon-pencil"></span>
+											</button>
+										</span>
+								</span>
+							</div>
+							
+							<div class="form-group" id="formPrincipal">
+								<label for="formPrincipal" class="control-label">Loan Amount</label>
+								<span class="input-group">
+									<span class="input-group-addon">$</span>
+									<input placeholder="Enter principal" name="principal" type="text" id="formPrincipalInput" class="form-control" value="">
+								</span>
+							</div>		
+							<div class="form-group" id="formLoanTerm" >
+								<label for="formLoanTerm" class="control-label">Term in months</label>
+								<span class="input-group">
+									<input name="loanTerm" placeholder="Enter loan term between 1 and 480" type="text" id="formLoanTermInput" class="form-control" value="">
+										<span class="input-group-addon">months</span>
+								</span>
+							</div>
+							
+							<div class="form-group" id="formLoanRate">
+								<label for="formLoanRate" class="control-label">Annual Percentage Rate</label>
+								<span class="input-group">
+									<input name="loanRate" placeholder="Enter rate" type="text" id="formLoanRateInput" class="form-control" value="">
+										<span class="input-group-addon">%</span>
+								</span>
+							</div>
+						</form>
+						<button type="submit" id="buttonCalculate" class="btn btn-primary">Calculate</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div style = "margin-bottom:20px">
+							<p class="lead text-center">Monthly Payments</p>
+							<p class="lead text-center numeral">
+								<span class="currency" id="currency"></span>
+								<span id="montlyPayment"></span>
+							</p>
+							<div class="justified-text-space-between with-bottom-border">
+								<span>Total Principal Paid</span>
+								<span id="totalPrincipalPaid"></span>
+							</div>
+							<div class="justified-text-space-between">
+								<span>Total Interest Paid</span>
+								<span id="totalInterestPaid"></span>
+							</div>
+						</div>
+						<div>
+							<a href="#amortizationSchedule" data-toggle="collapse" id="showHideAmortTableLink">Show amortization schedule</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="amortizationSchedule" class="collapse">
+			</div>
+		</div>
+		
+		
+		<div>
+		<p>&copy; Micro Focus</p>
+		</div>
+	</div>
+</body>
+</html>
