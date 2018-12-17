@@ -4,12 +4,12 @@
     "Parameters": {
         "dockerImageName": {
             "Type": "String",
-            "Default": "reponame:devhubmaven"
+            "Default": "040339284706.dkr.ecr.us-east-2.amazonaws.com/microfocus/docker/repo/vcdevhub:5.0"
         },
         "repositoryName": {
             "Type": "String",
             "AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
-            "Default": "myreponame"
+            "Default": "LoanAmortRepo"
         }
     },
     "Resources": {
@@ -44,7 +44,7 @@
                     "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonws.com/${dockerImageName}"
+                        "Ref": "dockerImageName"
                     }
                 },
                 "Source": {
@@ -76,7 +76,7 @@
                     "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonws.com/${dockerImageName}"
+                        "Ref": "dockerImageName"
                     }
                 },
                 "Source": {
