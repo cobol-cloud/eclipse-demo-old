@@ -8,7 +8,9 @@ phases:
   install:
     commands:
       # install prerequisites
-      - export M2_HOME=/opt/maven/apache-maven-3.5.4
+      - curl -s http://apache.cbox.biz/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz --output maven.tar.gz
+      - tar xzf maven.tar.gz
+      - export M2_HOME=$PWD/apache-maven-3.5.4
       - export ANT_HOME=$(find $MFPRODBASE/remotedev/ant -type d -name 'apache-ant*')
       - export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$ANT_HOME/bin:$PATH
       - . $MFPRODBASE/bin/cobsetenv
