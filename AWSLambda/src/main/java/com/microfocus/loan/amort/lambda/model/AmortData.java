@@ -11,6 +11,7 @@ public class AmortData {
 	private String principalPaid;
 	private String payment;
 	private String balance;
+	private String payNo;
 
 	public String getPayDateNo() {
 		return payDateNo;
@@ -50,5 +51,13 @@ public class AmortData {
 
 	public void setBalance(String balance) {
 		this.balance = balance;
+	}
+
+	public String getPayNo() {
+		return payNo;
+	}
+
+	public void setPayNo(String payNo) {
+		this.payNo = payNo;
 	}
 }

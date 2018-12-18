@@ -59,8 +59,9 @@ public class CalculateLoanHandler implements RequestHandler<Request, Response> {
 		for (int month = 0; month < request.getTerm(); month++) {
 			LocalDate payDate = currDate.plusMonths(month);
 			AmortData adObject = new AmortData();
+			adObject.setPayNo("#" + month);
 			adObject.setPayDateNo(
-					"#" + month + "    " + payDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+					payDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
 
 			adObject.setInterestPaid(outData.getOutintpaid(month));
 			adObject.setPrincipalPaid(outData.getOutprincpaid(month));
