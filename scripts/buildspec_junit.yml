@@ -8,9 +8,7 @@ phases:
   install:
     commands:
       # install prerequisites
-      - curl -s http://apache.cbox.biz/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz --output maven.tar.gz
-      - tar xzf maven.tar.gz
-      - export M2_HOME=$PWD/apache-maven-3.5.4
+      - export M2_HOME=/opt/maven/apache-maven-3.5.4
       - export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
     finally:
       # nothing special here 

@@ -8,10 +8,12 @@
         }
     },
     "Resources": {
-        "IAMU1EAHJ": {
+        "TutorialUser": {
             "Type": "AWS::IAM::User",
             "Properties": {
-                "UserName": "go6o",
+                "UserName": {
+                    "Ref": "userName"
+                },
                 "LoginProfile": {
                     "Password": "pass123",
                     "PasswordResetRequired": true
