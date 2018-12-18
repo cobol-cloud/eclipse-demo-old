@@ -6,12 +6,12 @@ package com.microfocus.loan.amort.lambda.model;
  * @author Micro Focus
  */
 public class AmortData {
+	private String payNo;
 	private String payDateNo;
 	private String interestPaid;
 	private String principalPaid;
 	private String payment;
 	private String balance;
-	private String payNo;
 
 	public String getPayDateNo() {
 		return payDateNo;
