@@ -106,6 +106,7 @@ Resources:
   # lambda - api gateway permissions
   permissions:
     Type: AWS::Lambda::Permission
+    DependsOn: [ lambdaFunction, apiGateway, lambdaFunctionAliasfncAlias ]
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:

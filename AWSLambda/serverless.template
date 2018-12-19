@@ -2,25 +2,13 @@
     "AWSTemplateFormatVersion" : "2010-09-09",
     "Transform" : [ "AWS::Serverless-2016-10-31" ],
     "Description": "AWS CloudFormation script used to create Lambda Function and API gateway to access it.",
-	"Parameters": {
-		"functionName": {
-    		"Description" : "Name of the Lambda Function.",
-			"Type": "String",
-			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
-			"Default": "LoanAmortFucntion"
-		},
-  		"apiName": {
-      		"Description" : "Name of the API gateway used to access the Lambda function.",
-			"Type": "String",
-			"AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
-			"Default": "LoanAmortApi"
-		}
-  	},
 	"Resources": {
 		"apiGateway": {
 			"Type": "AWS::Serverless::Api",
 			"Properties": {
-     			"Name": { "Ref": "apiName" },
+     			"Name": {
+          			"Fn::Sub": "${AWS::StackName}-LoanAmortAPI"
+                },
 				"StageName": "loanamort",
 				"DefinitionBody": {
 					"swagger": "2.0",
@@ -94,7 +82,9 @@
   		"lambdaFunction": {
 			"Type": "AWS::Serverless::Function",
 			"Properties": {
-     			"FunctionName": { "Ref": "functionName" },
+     			"FunctionName": {
+          			"Fn::Sub": "${AWS::StackName}-LoanAmortFunction"
+                },
 				"Handler": "com.microfocus.loan.amort.lambda.CalculateLoanHandler",
 				"Runtime": "java8",
 				"CodeUri": "./target/loanlambda-1.0.0.jar",
@@ -109,9 +99,10 @@
 		},
         "permissions": {
             "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "lambdaFunction", "apiGateway", "lambdaFunctionAliasfncAlias" ],
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": { "Fn::Join": ["", [{ "Ref": "functionName" }, ":fncAlias"] ] },
+                "FunctionName": { "Fn::Sub": "${lambdaFunction}:fncAlias" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": { "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/" }
             }
