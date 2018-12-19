@@ -15,7 +15,6 @@ package com.microfocus.loan.amort.lambda.model;
  * @author Micro Focus
  */
 public class AmortData {
-	private String payNo;
 	private String payDateNo;
 	private String interestPaid;
 	private String principalPaid;
@@ -60,13 +59,5 @@ public class AmortData {
 
 	public void setBalance(String balance) {
 		this.balance = balance;
-	}
-
-	public String getPayNo() {
-		return payNo;
-	}
-
-	public void setPayNo(String payNo) {
-		this.payNo = payNo;
 	}
 }
