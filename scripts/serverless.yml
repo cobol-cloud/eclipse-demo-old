@@ -1,3 +1,4 @@
+# This script is executed during deployment stage of the pipeline
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: AWS CloudFormation script used to create Lambda Function and API gateway to access it.
