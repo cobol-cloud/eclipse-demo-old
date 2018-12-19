@@ -2,11 +2,11 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "CloudFormation Stack template creating a CI/CD Pipeline for Loan Amort Demo",
     "Parameters": {
-        "dockerImageName": {
+        "paramECRRepository": {
             "Type": "String",
-            "Default": "reponame:devhubmaven"
+            "Default": "reponame:imagetag"
         },
-        "repositoryName": {
+        "paramCodeCommitRepository": {
             "Type": "String",
             "AllowedPattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$",
             "Default": "myreponame"
@@ -44,7 +44,7 @@
                     "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${dockerImageName}"
+                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${paramECRRepository}"
                     }
                 },
                 "Source": {
@@ -76,7 +76,7 @@
                     "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${dockerImageName}"
+                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${paramECRRepository}"
                     }
                 },
                 "Source": {
@@ -152,7 +152,7 @@
                                 "codecommit:GitPull"
                             ],
                             "Resource": {
-                                "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${repositoryName}"
+                                "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${paramCodeCommitRepository}"
                             }
                         }
                     ]
@@ -216,7 +216,7 @@
                                 "codecommit:UploadArchive"
                             ],
                             "Resource": {
-                                "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${repositoryName}"
+                                "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${paramCodeCommitRepository}"
                             }
                         },
                         {
@@ -499,7 +499,7 @@
                                     "BranchName": "master",
                                     "PollForSourceChanges": "false",
                                     "RepositoryName": {
-                                        "Ref": "repositoryName"
+                                        "Ref": "paramCodeCommitRepository"
                                     }
                                 },
                                 "OutputArtifacts": [
@@ -669,7 +669,7 @@
                     ],
                     "resources": [
                         {
-                            "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${repositoryName}"
+                            "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${paramCodeCommitRepository}"
                         }
                     ],
                     "detail": {
