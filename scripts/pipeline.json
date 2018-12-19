@@ -30,7 +30,7 @@
             "Type": "AWS::CodeBuild::Project",
             "DependsOn": [
                 "LoanAmortS3Bucket",
-                "CodeBuildRole"
+                "CodeBuildRolePolicy"
             ],
             "Properties": {
                 "Name": {
@@ -61,7 +61,7 @@
             "Type": "AWS::CodeBuild::Project",
             "DependsOn": [
                 "LoanAmortS3Bucket",
-                "CodeBuildRole",
+                "CodeBuildRolePolicy",
                 "LoanAmortBuildProject"
             ],
             "Properties": {
@@ -405,6 +405,57 @@
                 }
             }
         },
+        "CloudWatchRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Principal": {
+                                "Service": [
+                                    "events.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Path": "/"
+            }
+        },
+        "CloudWatchRolePolicy": {
+            "Type": "AWS::IAM::Policy",
+            "DependsOn": [
+                "CloudWatchRole",
+                "LoanAmortPipeline"
+            ],
+            "Properties": {
+                "PolicyName": "CloudWatchRolePolicy",
+                "Roles": [
+                    {
+                        "Ref": "CloudWatchRole"
+                    }
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "codepipeline:StartPipelineExecution"
+                            ],
+                            "Resource": {
+                                "Fn::Sub": "arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${LoanAmortPipeline}"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
         "LoanAmortPipeline": {
             "Type": "AWS::CodePipeline::Pipeline",
             "DependsOn": [
@@ -596,6 +647,58 @@
                                 "InputArtifacts": []
                             }
                         ]
+                    }
+                ]
+            }
+        },
+        "CloudWatchEventRule": {
+            "Type": "AWS::Events::Rule",
+            "DependsOn": [
+                "CloudWatchRole",
+                "CloudWatchRolePolicy",
+                "LoanAmortPipeline"
+            ],
+            "Properties": {
+                "Description": "CloudWatch Event Rule to start piprline upon changes in CodeCommit repository",
+                "EventPattern": {
+                    "source": [
+                        "aws.codecommit"
+                    ],
+                    "detail-type": [
+                        "CodeCommit Repository State Change"
+                    ],
+                    "resources": [
+                        {
+                            "Fn::Sub": "arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${repositoryName}"
+                        }
+                    ],
+                    "detail": {
+                        "event": [
+                            "referenceCreated",
+                            "referenceUpdated"
+                        ],
+                        "referenceType": [
+                            "branch"
+                        ],
+                        "referenceName": [
+                            "master"
+                        ]
+                    }
+                },
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::Sub": "arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${LoanAmortPipeline}"
+                        },
+                        "RoleArn": {
+                            "Fn::GetAtt": [
+                                "CloudWatchRole",
+                                "Arn"
+                            ]
+                        },
+                        "Id": {
+                            "Fn::Sub": "${AWS::StackName}-cloudwatchEventRule-${LoanAmortPipeline}"
+                        }
                     }
                 ]
             }
