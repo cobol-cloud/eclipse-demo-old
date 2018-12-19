@@ -1,3 +1,12 @@
+/****************************************************************************
+ *
+ *   Copyright (C) Micro Focus 1984-2018. All rights reserved.
+ *
+ *   This sample code is supplied for demonstration purposes only
+ *   on an "as is" basis and is for use at your own risk.
+ *
+ ****************************************************************************/
+
 package com.microfocus.loan.amort.lambda.model;
 
 import com.microfocus.loan.amort.lambda.CalculateLoanHandler;

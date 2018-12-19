@@ -1,3 +1,12 @@
+      ******************************************************************
+      *
+      * Copyright (C) Micro Focus 1984-2018. All rights reserved.
+      *
+      * This sample code is supplied for demonstration purposes only
+      * on an "as is" basis and is for use at your own risk.
+      *
+      ******************************************************************
+
        01 G-QUESTIONS.
        COPY "APPLICATIONHEADER.SS".
          02 LINE 5 COL 1 "PRINCIPAL : "
