@@ -11,10 +11,10 @@
 <script src="App.js"></script>
 
 <style> 
-  .numeral {font-weight: bold; font-size: 4rem; line-height: 1.1}
+  .numeral {font-weight: bold; font-size: 4rem; line-height: 1.5}
   .currency {font-size: 50%; position: relative; top:-1.25rem}
   .justified-text-space-between {display: flex; text-aling:center; justify-content: space-between; line-height: 27px;} 
-  .with-bottom-border {border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: rgb(221, 221, 221);}
+  .with-top-border {border-top-style: solid; border-top-width: 1px; border-top-color: rgb(221, 221, 221);}
 </style>
 
 </head>
@@ -81,11 +81,7 @@
 								<span class="currency" id="currency"></span>
 								<span id="montlyPayment"></span>
 							</p>
-							<div class="justified-text-space-between with-bottom-border">
-								<span>Total Principal Paid</span>
-								<span id="totalPrincipalPaid"></span>
-							</div>
-							<div class="justified-text-space-between">
+							<div class="justified-text-space-between with-top-border">
 								<span>Total Interest Paid</span>
 								<span id="totalInterestPaid"></span>
 							</div>

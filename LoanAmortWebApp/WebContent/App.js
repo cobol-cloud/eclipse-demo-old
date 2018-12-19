@@ -214,7 +214,6 @@ function updatePaymentSummary(data) {
 	$("#currency").text(currency);
 	$("#montlyPayment").text(payment);
 	$("#totalInterestPaid").text(data.totalInterest);
-	$("#totalPrincipalPaid").text("N/A");
 }
 
 function renderTable(tableData) {
