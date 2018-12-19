@@ -27,7 +27,8 @@
                     "arn:aws:iam::aws:policy/AWSCodeCommitFullAccess",
                     "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess",
                     "arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess",
-                    "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
+                    "arn:aws:iam::aws:policy/AWSLambdaFullAccess",
+                    "arn:aws:iam::aws:policy/CloudWatchFullAccess"
                 ],
                 "Policies": [
                     {
