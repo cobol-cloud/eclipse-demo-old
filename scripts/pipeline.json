@@ -16,6 +16,7 @@
         "LoanAmortS3Bucket": {
             "Description": "An S3 bucket holding pipeline artifacts for Loan Amort Pipeline",
             "Type": "AWS::S3::Bucket",
+             "DeletionPolicy": "Retain",
             "Properties": {
                 "BucketName": {
                     "Fn::Sub": "${AWS::StackName}-s3bucket"
